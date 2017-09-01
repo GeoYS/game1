@@ -8,5 +8,5 @@ Current tech:
 
 Getting the proj to do stuff:
 - go to proj folder
-- node servre.js
+- ```node server.js```
 - go to localhost:4545/client/client.html
