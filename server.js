@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
-app.post('/syncClient', function(req, res) {
+app.post('/syncClient', function(req, res) { // Test purposes
     var clientSyncReq = req.body;
     var syncRes;
     
