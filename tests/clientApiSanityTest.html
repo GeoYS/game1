@@ -1,0 +1,80 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+	<meta charset="UTF-8" />
+	<title>Client API Sanity Test</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+        .pass {
+            color: white;
+            background-color: green;
+        }
+        .fail {
+            color: white;
+            background-color: red;
+        }
+    </style>
+</head>
+<body id="testContainer">
+
+<script>
+
+testApi("validateLogin", {username: "test", pass: "pass"}, "Validate login", function(data) {
+    if (data.valid !== true) {
+        failTest("validateLogin");
+    }
+});
+testApi("getOnlineFriends", {}, "Get online friends", function(data) {
+    if (data.numFriends !== 1 && data.friends[0] !== "Bob") {
+        failTest("validateLogin");
+    }
+});
+testApi("createParty", {}, "createParty");
+testApi("leaveParty", {}, "leaveParty");
+
+testApi("joinQueue", {}, "joinQueue");
+testApi("leaveQueue", {}, "leaveQueue");
+testApi("updateQueueState", {}, "updateQueueState");
+
+testApi("createCustomGame", {}, "createCustomGame");
+testApi("joinCustomGame", {}, "joinCustomGame");
+
+testApi("postChat", {}, "postChat");
+testApi("updateChat", {}, "updateChat");
+testApi("getUserCards", {}, "getUserCards");
+testApi("getUserDecks", {}, "getUserDecks");
+testApi("saveDeck", {}, "saveDeck");
+
+testApi("updatePreGame", {}, "updatePreGame");
+testApi("updateGame", {}, "updateGame");
+
+testApi("nonExistentApi", {}, "This test case is supposed to fail.");
+
+function testApi(apiName, params, description, callback) {
+    $("#testContainer").append("<p id=\"" + apiName + "\" class=\"fail\">" + description + "</p>");
+    $.post( "/" + apiName, wrapParams(params), function( data ) {
+        passTest(apiName);
+        if (callback) {
+            callback(data);
+        }
+    });
+}
+
+function passTest(testSelector) {
+    $("#" + testSelector).removeClass("fail");
+    $("#" + testSelector).addClass("pass");
+}
+
+function failTest(testSelector) {
+    $("#" + testSelector).removeClass("pass");
+    $("#" + testSelector).addClass("fail");
+}
+
+function wrapParams(params) {
+    return {data: params};
+}
+
+</script>
+
+</body>
+</html>
