@@ -11,7 +11,8 @@
 	<script type="text/javascript" src="js/states/lobby.js"></script>
 	<script type="text/javascript" src="js/states/pregame.js"></script>
 	<script type="text/javascript" src="js/states/ingame.js"></script>
-	<script type="text/javascript" src="js/screens.js"></script>
+	<script type="text/javascript" src="js/sync.js"></script>
+	<script type="text/javascript" src="js/game-text.js"></script>
     <style type="text/css">
         body {
             margin: 0;
@@ -19,25 +20,18 @@
     </style>
 </head>
 <body>
-
 <script type="text/javascript">
-
 var game = new Phaser.Game( window.innerWidth * window.devicePixelRatio,
 	                        window.innerHeight * window.devicePixelRatio,
 						    Phaser.CANVAS,
 						    'mainGame');
-
 game.state.add('init', GameStates.INIT);
 game.state.add('load_assets', GameStates.LOAD_ASSETS);
 game.state.add('login', GameStates.LOGIN);
 game.state.add('lobby', GameStates.LOBBY);
 game.state.add('pregame', GameStates.PREGAME);
 game.state.add('ingame', GameStates.INGAME);
-
-
 game.state.start('init');
-
 </script>
-
 </body>
 </html>

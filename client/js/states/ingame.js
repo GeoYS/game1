@@ -1,4 +1,4 @@
-GameStates.INGAME = funcion(game) {};
+GameStates.INGAME = function(game) {};
 
 GameStates.INGAME.prototype = {
     init: function() {
@@ -16,9 +16,6 @@ GameStates.INGAME.prototype = {
         for (var i = 0; i < trees.children.length; i++) {
             trees.children[i].body.setSize(64, 64, 0, 64);
         }
-
-        game.physics.startSystem(Phaser.Physics.ARCADE);
-        game.physics.arcade.gravity.y = 0;
 
         player = game.add.sprite(0, 0, 'placeholder');
         game.physics.arcade.enable(player);
@@ -84,3 +81,44 @@ GameStates.INGAME.prototype = {
         }
     }
 };
+
+var player;
+var activePointer;
+var startDrag = null;
+var target = null;
+var vel = 200;
+
+function screenToWorld(sx, sy) {
+    var worldCoords = {x: sx + game.camera.x, y: sy + game.camera.y};
+    return worldCoords;
+}
+
+function onTap(pointer, doubleTap) {
+    if (!player.selected) {
+        if (player.containsPoint(screenToWorld(pointer.x, pointer.y))) {
+            player.selected = true;
+            player.loadTexture('placeholder2');
+        }
+    } else {
+        if (!(player.containsPoint(screenToWorld(pointer.x, pointer.y)))) {
+            player.selected = false;
+            player.loadTexture('placeholder');
+        } else {
+            target = null;
+            player.body.velocity.x = 0;
+            player.body.velocity.y = 0;
+        }
+    }
+}
+
+function onDrag(sX, sY, eX,eY) {
+    if (player.selected) {
+        if (player.containsPoint(screenToWorld(sX, sY))) {
+            target = screenToWorld(eX, eY);
+            var angle = game.math.angleBetweenPoints(new Phaser.Point(sX, sY), new Phaser.Point(eX, eY));
+
+            player.body.velocity.x = Math.cos(angle) * vel;
+            player.body.velocity.y = Math.sin(angle) * vel;
+        }
+    }
+}
