@@ -42,6 +42,14 @@ function updateQueueState(req) {
     
 }
 
+function createCustomGame(req) {
+    
+}
+
+function joinCustomGame(req) {
+    
+}
+
 function postChat(req) {
     
 }
@@ -80,6 +88,9 @@ this.functions = {
                 '/joinQueue': joinQueue,
                 '/leaveQueue': leaveQueue,
                 '/updateQueueState': updateQueueState,
+                
+                '/createCustomGame': createCustomGame,
+                '/joinCustomGame': joinCustomGame,
                 
                 '/postChat': postChat,
                 '/updateChat': updateChat,
