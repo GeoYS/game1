@@ -62,8 +62,6 @@ GameStates.INGAME.prototype = {
             player.body.velocity.y = 0;
             target = null;
         }
-
-        syncState();
     },
 
     render: function() {
