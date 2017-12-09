@@ -5,7 +5,8 @@
 function Unit(game, x, y, type) {
     this.game = game;
     this.pos = {x: x, y: y};
-    this.type = type;    
+    this.type = type; 
+    this.isDead = false;
     
     this.update = function(delta) {
         

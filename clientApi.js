@@ -1,7 +1,7 @@
 // Validate user login credentials against DB
 // - request: username, pass
 // - response: valid
-function validateLogin(req) {
+function validateLogin(req, server) {
     // TODO: check against DB
     
     if (req.username == 'test') {
@@ -16,65 +16,65 @@ function validateLogin(req) {
 // Get list of user's friends from DB
 // - request: username
 // - response: numFriends, friends
-function getOnlineFriends(req) {
+function getOnlineFriends(req, server) {
     var res = {numFriends: 1, friends: ['Bob']};
     
     return res;
 }
 
-function createParty(req) {
+function createParty(req, server) {
     
 }
 
-function leaveParty(req) {
+function leaveParty(req, server) {
     
 }
 
-function joinQueue(req) {
+function joinQueue(req, server) {
     
 }
 
-function leaveQueue(req) {
+function leaveQueue(req, server) {
     
 }
 
-function updateQueueState(req) {
+function updateQueueState(req, server) {
     
 }
 
-function createCustomGame(req) {
+function createCustomGame(req, server) {
     
 }
 
-function joinCustomGame(req) {
+function joinCustomGame(req, server) {
     
 }
 
-function postChat(req) {
+function postChat(req, server) {
     
 }
 
-function updateChat(req) {
+function updateChat(req, server) {
     
 }
 
-function getUserCards(req) {
+function getUserCards(req, server) {
     
 }
 
-function getUserDecks(req) {
+function getUserDecks(req, server) {
     
 }
 
-function saveDeck(req) {
+function saveDeck(req, server) {
     
 }
 
-function updatePreGame(req) {
+function updatePreGame(req, server) {
     
 }
 
-function updateGame(req) {
+function updateGame(req, server) {
     
 }
 
