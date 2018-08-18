@@ -10,10 +10,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js"
   },
-  "author": "",
+  "author": "martin.lai <martin9874@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.17.2",
     "express": "^4.15.4"
-  }
+  },
+  "repository": "https://github.com/GeoYS/game1.git"
 }
