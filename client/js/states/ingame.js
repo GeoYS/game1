@@ -3,7 +3,6 @@ GameStates.INGAME = function(game) {};
 GameStates.INGAME.prototype = {
     init: function() {
         game.stage.backgroundColor = '#454645';
-
         map = game.add.tilemap('map');
         map.addTilesetImage('ground', 'groundts');
         layer = map.createLayer('groundlayer');
@@ -33,6 +32,9 @@ GameStates.INGAME.prototype = {
         //game.input.onTap.add(onTap, this);
 
         activePointer = game.input.activePointer;
+
+        initializeButton();
+
     },
 
     update: function() {
