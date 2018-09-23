@@ -1,6 +1,7 @@
 # game1
 Card-based MOBA game
 work in progress
+More info can be found in the wiki: https://github.com/GeoYS/game1/wiki
 
 Current tech:
 - node for server, using restful api to comm with client
