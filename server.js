@@ -1,10 +1,25 @@
-// Update loop, up to 60 times per second
-this.update = function(delta) {
-}
+/*************************************************************
+ * The Server object is the first layer of abstraction. It is
+ * responsible for managing socket connections, handling 
+ * incoming and broadcasting outgoing socket events, and 
+ * calling the update loop of the GameManager.
+ *************************************************************/
 
-// Function called each time a client API is called
-// The param heartbeatdata should contain info on the 
-// client calling the API
-this.heartbeat = function(heartbeatData) {
-    
-}
+/**
+ * The update loop.
+ * @param {Number} delta - Time since last update in milliseconds
+ */
+this.update = function(delta) {
+};
+
+/**
+ * Called whenever socket.io gets a new connection.
+ * @param {Socket} socket 
+ */
+this.newConnection = function(socket) {
+
+};
+
+let gameManager = new GameManager();
+let lobbyManager = new LobbyManager();
+let userManager = new UserManager();
