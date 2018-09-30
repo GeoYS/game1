@@ -3,15 +3,33 @@
  * socket.io is set up, and the main loop starts.
  ********************************************************************/
 
-var express = require('express');
-var bodyParser = require('body-parser');
+/**
+ * Debug flag
+ */
+const debug = false;
+
+/**
+ * Unit tests
+ */
+require('./tests/serverTests.js').runTests();
+
+/**
+ * Load dependendies
+ */
+
 var clientApi = require('./clientApi.js');
 var server = require('./server.js');
+
+var express = require('express');
+var bodyParser = require('body-parser');
 var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
 var port = 4545;
 
 /**
- * Express
+ * Express Setup
  */
 
 // To serve web client files from root directory of server
@@ -32,16 +50,25 @@ Object.keys(clientApi.functions).forEach(function(key, index) {
     });
 });
 
-// Start express
-app.listen(port, function () {
-  console.log('Game server is listening on port ' + port + ' !')
+/**
+ * Socket.io Setup
+ */
+
+io.on('connection', function(socket){
+    console.log('A connection has started...');
+    socket.on('disconnect', function(){
+        console.log('A connection has ended.');
+    });
+    server.newConnection(socket);
 });
 
 /**
- * Socket.io
+ * Start server
  */
 
-//TODO
+http.listen(port, function () {
+    console.log('Game server is listening on port ' + port + ' !')
+});
 
 /**
  * Main Loop
@@ -58,4 +85,8 @@ setInterval(function() {
     
     lastUpdate = currTime;
     server.update(delta);
+
+    if(debug) {
+        console.log('Last delta: ' + delta);
+    }
 }, TARGET_DELTA);

@@ -5,6 +5,10 @@
  * calling the update loop of the GameManager.
  *************************************************************/
 
+var gm = require('./gameManager.js');
+var lm = require('./lobbyManager.js');
+var um = require('./userManager.js');
+
 /**
  * The update loop.
  * @param {Number} delta - Time since last update in milliseconds
@@ -20,6 +24,6 @@ this.newConnection = function(socket) {
 
 };
 
-let gameManager = new GameManager();
-let lobbyManager = new LobbyManager();
-let userManager = new UserManager();
+let gameManager = new gm.GameManager();
+let lobbyManager = new lm.LobbyManager();
+let userManager = new um.UserManager();

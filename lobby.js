@@ -6,4 +6,9 @@ var util = require('./util.js')
  * - keeping track of the chat log shared between the players in this group
  */ 
 function Lobby() {
+    let users = [];
+
+    this.applyAction = function(action) {
+        // Return a list of out actions if applicable
+    };
 }

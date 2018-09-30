@@ -12,14 +12,7 @@
  * Once an Entity should be removed from the game, set isDead = 1 
  */
 function Entity(/*attribute templates*/) {
-    for(let i = 0; i < arguments.length; i++) {
-        for(let k in attributes) {
-            this[k] = attributes[k];
-            // Attributes could be type, HP, position, etc.
-            // In the case of function attributes, the functions must
-            // accept 'this' as the first parameter 
-        }
-    }
+    Object.assign(this, ...arguments);
 
     this.update = function(delta, game) {
         console.log("TODO: implement update!!!");
@@ -32,4 +25,8 @@ function Entity(/*attribute templates*/) {
         //    instead through the use of the callback function (i.e. 'game'
         //    should be treated as readonly within this function).
     };
+}
+
+module.exports = {
+    Entity:Entity
 }

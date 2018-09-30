@@ -14,7 +14,8 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.17.2",
-    "express": "^4.15.4"
+    "express": "^4.15.4",
+    "socket.io": "^2.1.1"
   },
   "repository": "https://github.com/GeoYS/game1.git"
 }

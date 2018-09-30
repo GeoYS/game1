@@ -5,13 +5,13 @@ var util = require('./util.js')
  * happening at once. Contains the game update logic. Should expose
  * interface for applying user actions.
  */ 
-function Game(width, height) {
+function Game(info) {
     let entities = [];
     let pendingChanges = [];
     let actionChanges = [];
     
-    this.width = width;
-    this.height = height;
+    this.width = info.width;
+    this.height = info.height;
     this.isFinished = false;
     
     this.update = function(delta) {
@@ -35,7 +35,11 @@ function Game(width, height) {
     };
     
     this.addEntity = function(entity) {
-        enitities.push(entity);
+        entities.push(entity);
+    };
+
+    this.getUserSnapshot = function(user) {
+        return entities; // TODO: user specific snapshot
     };
 
     this.applyAction = function(action) {
@@ -43,4 +47,8 @@ function Game(width, height) {
         // Interpret action into a tangible change to the world and 
         // queue change (as callback) to be applied next update cycle.
     }
+}
+
+module.exports = {
+    Game:Game
 }
