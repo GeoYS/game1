@@ -1,5 +1,6 @@
 var e = require('../entity.js');
 var g = require('../game.js');
+var um = require('../userManager.js');
 
 this.runTests = function() {
     initTests();
@@ -12,6 +13,43 @@ let tests = [];
 
 let initTests = function() {
     tests.push(
+        /**
+         * Test userManager.js
+         */
+        function() {
+            let testUserManager = new um.UserManager();
+            let ret = testUserManager.handleUserAction({
+                type: 'login',
+                username: 'test'
+            });
+            test("UserManager first login", ret != undefined &&
+                    ret.type === 'loginSuccess' &&
+                    ret.instanceAuth != undefined);
+
+            ret = testUserManager.handleUserAction({
+                type: 'login',
+                username: 'test'
+            });
+            test("UserManager dupe login", ret != undefined &&
+                    ret.type === 'loginFail' &&
+                    ret.instanceAuth == undefined &&
+                    ret.message != undefined);
+
+            ret = testUserManager.handleUserAction({
+                type: 'disconnect',
+                username: 'test'
+            });
+            test("UserManager disconnect", ret == undefined);
+
+            ret = testUserManager.handleUserAction({
+                type: 'login',
+                username: 'test'
+            });
+            test("UserManager first login", ret != undefined &&
+                    ret.type === 'loginSuccess' &&
+                    ret.instanceAuth != undefined);
+        },
+
         /**
          * Test entity.js
          */

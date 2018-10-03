@@ -18,6 +18,7 @@ require('./tests/serverTests.js').runTests();
  */
 
 var clientApi = require('./clientApi.js');
+
 var server = require('./server.js');
 
 var express = require('express');
@@ -77,6 +78,8 @@ http.listen(port, function () {
 // Main loop vars
 const TARGET_DELTA = 1000/240; // Milliseconds
 var lastUpdate = Date.now();
+
+server.init();
 
 // Main loop
 setInterval(function() {
