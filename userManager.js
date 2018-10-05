@@ -41,6 +41,22 @@ function UserManager() {
                 };
         }
     }
+
+    this.auth = function(username, userId) {
+        let userEntry = onlineUsers[username];
+        return userEntry != undefined && 
+                userEntry.online &&
+                userEntry.id === userId;
+    }
+
+    this.nameToId = function(username) {
+        let userEntry = onlineUsers[username];
+        if(userEntry == undefined) {
+            return undefined;
+        } else {
+            return userEntry.id;
+        }
+    };
 }
 
 module.exports = {

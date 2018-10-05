@@ -10,11 +10,14 @@ var lm = require('./lobbyManager.js');
 var um = require('./userManager.js');
 
 let userSocketTable = {};
+let io = null;
 
 /**
  * Init things like a global lobby.
  */
-this.init = function() {
+this.init = function(socketIO) {
+    lobbyManager.newLobby('global');
+    io = socketIO;
 };
 
 /**
@@ -37,16 +40,82 @@ this.newConnection = function(socket) {
         if(ret != null) {
             if(ret.type === 'loginSuccess') {
                 userSocketTable[ret.instanceAuth] = socket;
+                lobbyManager.handleUserAction({
+                    type: 'join',
+                    lobbyName: 'global'
+                });
             }
             socket.emit(ret.type, ret);
         }
     });
+    socket.on('chatMessage', function(info) {
+        if(!userManager.auth(info.username, info.instanceAuth)) {
+            // Uh oh
+            return;
+        }
+
+        let outAction = lobbyManager.handleUserAction({
+            type:'chatMessage',
+            username:info.username,
+            lobbyName: info.lobbyName,
+            message: info.message
+        });
+
+        for(let user in outAction.users) {
+            userSocketTable[user].broadcast.emit('chatMessage', {
+                lobbyName: info.lobbyName,
+                message: outAction.message
+            });
+        }
+    });
+    socket.on('createLobby', function(info) {
+        if(!userManager.auth(info.username, info.instanceAuth)) {
+            // Uh oh
+            return;
+        }
+
+        if( typeof this.newLobbyCounter == 'undefined' ) {
+            this.newLobbyCounter = 0;
+        }
+        this.newLobbyCounter++;
+
+        let newLobbyName = 'lobby' + this.newLobbyCount;
+        lobbyManager.newLobby(newLobbyName, [info.username]);
+        socket.broadcast.emit('joinGameLobby', newLobbyName);
+    });    
+    socket.on('joinLobby', function(info) {
+        if(!userManager.auth(info.username, info.instanceAuth)) {
+            // Uh oh
+            return;
+        }
+
+        let lobbyName = info.lobbyName;
+         
+        lobbyManager.handleUserAction({
+            type: 'join',
+            lobbyName: lobbyName
+        });
+        socket.broadcast.emit('joinGameLobby', lobbyName);
+    });
     socket.on('disconnect', function(info) {
-        delete userSocketTable[info.instanceAuth];
+        if(userManager.auth(info.username, info.instanceAuth)) {
+            // Uh oh
+            return;
+        }
+
         userManager.handleUserAction({
             type:'disconnect',
             username:info.username
         });
+        lobbyManager.handleUserAction({
+            type:'disconnect',
+            username:info.username
+        });        
+        gameManager.handleUserAction({
+            type:'disconnect',
+            username:info.username
+        });
+        delete userSocketTable[info.instanceAuth];
     });
 };
 

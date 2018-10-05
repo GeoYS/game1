@@ -38,14 +38,17 @@ function Game(info) {
         entities.push(entity);
     };
 
-    this.getUserSnapshot = function(user) {
+    this.getUserSnapshot = function(username) {
         return entities; // TODO: user specific snapshot
     };
 
+    /**
+     * User actions impact the game like an act of god haha...
+     * Interpret action into a tangible change to the world and 
+     * queue change (as callback) to be applied next update cycle.
+     * @param {*} action 
+     */
     this.applyAction = function(action) {
-        // User actions impact the game like an act of god haha...
-        // Interpret action into a tangible change to the world and 
-        // queue change (as callback) to be applied next update cycle.
     }
 }
 

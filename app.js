@@ -79,7 +79,7 @@ http.listen(port, function () {
 const TARGET_DELTA = 1000/240; // Milliseconds
 var lastUpdate = Date.now();
 
-server.init();
+server.init(io);
 
 // Main loop
 setInterval(function() {

@@ -1,6 +1,7 @@
 var e = require('../entity.js');
 var g = require('../game.js');
 var um = require('../userManager.js');
+var l = require('../lobby.js');
 
 this.runTests = function() {
     initTests();
@@ -13,6 +14,51 @@ let tests = [];
 
 let initTests = function() {
     tests.push(
+        /**
+         * Test lobby.js
+         */
+        function() {
+            let testLobby = new l.Lobby('test', ['testUser1']);
+            let ret = testLobby.handleUserAction({
+                type: 'join',
+                username: 'testUser1'
+            });
+            test('Lobby init', testLobby.name == 'test');
+            test('Lobby dupe', ret != undefined && 
+                    ret.type == 'joinFail');
+
+            ret = testLobby.handleUserAction({
+                type: 'join',
+                username: 'testUser2'
+            });
+            test('Lobby join', ret == undefined);
+
+            ret = testLobby.handleUserAction({
+                type: 'chatMessage',
+                username: 'testUser2',
+                message: 'message'
+            });
+            test('Lobby chat', ret != undefined &&
+                    ret.message == 'testUser2: message' &&
+                    ret.users.length == 2 &&
+                    ret.users[0] == 'testUser1' &&
+                    ret.users[1] == 'testUser2');
+
+            ret = testLobby.handleUserAction({
+                type: 'disconnect',
+                username: 'testUser2'
+            });
+            test('Lobby disconnect ret', ret == undefined);
+            ret = testLobby.handleUserAction({
+                type: 'chatMessage',
+                username: 'testUser1',
+                message: 'message'
+            });
+            test('Lobby chat after disconnect', ret != undefined &&
+                    ret.message == 'testUser1: message' &&
+                    ret.users.length == 1 &&
+                    ret.users[0] == 'testUser1');
+        },
         /**
          * Test userManager.js
          */

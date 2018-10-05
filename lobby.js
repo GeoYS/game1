@@ -5,10 +5,45 @@ var util = require('./util.js')
  * - knowing which players belong in this group
  * - keeping track of the chat log shared between the players in this group
  */ 
-function Lobby() {
-    let users = [];
+function Lobby(name, pUsers) {
+    let users = (pUsers == undefined ? [] : pUsers);
+    
+    this.name = name;
 
-    this.applyAction = function(action) {
-        // Return a list of out actions if applicable
+    /**
+     * Return a out action if applicable
+     * @param {*} action 
+     */
+    this.handleUserAction = function(action) {
+        switch(action.type) {
+            case 'join':
+                if(!users.includes(action.username)) {
+                    users.push(action.username);
+                } else {
+                    return {
+                        type: 'joinFail'
+                    };
+                }
+                break;
+            case 'chatMessage':            
+                if(users.includes(action.username)) {
+                    return {
+                        type: 'chatBroadcast',
+                        message: action.username + ': ' + action.message,
+                        users: users
+                    };
+                }
+                break;
+            case 'disconnect':
+                users.splice(users.indexOf(action.username, 1));
+                break;
+            default:
+                console.log('Error applying action in lobby...');
+                break;
+        }
     };
+}
+
+module.exports = {
+    Lobby:Lobby
 }
