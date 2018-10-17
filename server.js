@@ -9,6 +9,7 @@ var gm = require('./gameManager.js');
 var lm = require('./lobbyManager.js');
 var um = require('./userManager.js');
 
+// user id maps to socket
 let userSocketTable = {};
 let io = null;
 
@@ -61,12 +62,12 @@ this.newConnection = function(socket) {
             message: info.message
         });
 
-        for(let user in outAction.users) {
+        outAction.users.forEach(function(user) {
             userSocketTable[user].broadcast.emit('chatMessage', {
                 lobbyName: info.lobbyName,
                 message: outAction.message
             });
-        }
+        });
     });
     socket.on('createLobby', function(info) {
         if(!userManager.auth(info.username, info.instanceAuth)) {
@@ -91,11 +92,62 @@ this.newConnection = function(socket) {
 
         let lobbyName = info.lobbyName;
          
-        lobbyManager.handleUserAction({
+        let ret = lobbyManager.handleUserAction({
             type: 'join',
-            lobbyName: lobbyName
+            lobbyName: lobbyName,
+            username: info.username
         });
-        socket.broadcast.emit('joinGameLobby', lobbyName);
+
+        if(ret.type == 'joinFail') {
+            socket.broadcast.emit('joinLobbyFail', lobbyName);   
+        } else {
+            socket.broadcast.emit('joinedLobby', lobbyName);
+        }
+    });
+    socket.on('gameReady', function(info) {
+        if(!userManager.auth(info.username, info.instanceAuth)) {
+            // Uh oh
+            return;
+        }
+
+        let lobbyName = info.lobbyName;
+
+        let ret = lobbyManager.handleUserAction({
+            type: 'ready',
+            lobbyName: info.lobbyName,
+            username: info.username
+        });
+
+        if(ret.type == 'readyFail') {
+            socket.broadcast.emit('gameReadyFail', lobbyName);   
+        } else {
+            socket.broadcast.emit('gameReady', lobbyName);
+        }
+    });
+    socket.on('gameStart', function(info) {
+        if(!userManager.auth(info.username, info.instanceAuth)) {
+            // Uh oh
+            return;
+        }
+
+        let lobbyName = info.lobbyName;
+
+        let ret = lobbyManager.handleUserAction({
+            type: 'start',
+            lobbyName: info.lobbyName,
+            username: info.username
+        });
+
+        if(ret.type == 'startFail') {
+            socket.broadcast.emit('gameStartFail', lobbyName);   
+        } else {
+            gameManager.newGame(ret);
+            ret.users.forEach(function (username){
+                let userId = userManager.nameToId(userName);
+                userSocketTable[userId].broadcast.emit('gameStart', lobbyName);
+            });
+            socket.broadcast.emit('gameStart', lobbyName);
+        }
     });
     socket.on('disconnect', function(info) {
         if(userManager.auth(info.username, info.instanceAuth)) {

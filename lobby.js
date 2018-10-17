@@ -6,8 +6,14 @@ var util = require('./util.js')
  * - keeping track of the chat log shared between the players in this group
  */ 
 function Lobby(name, pUsers) {
-    let users = (pUsers == undefined ? [] : pUsers);
+    let users = {};
     
+    if(pUsers !== undefined) {
+        pUsers.forEach(function(user) {
+            users[user] = {ready: false};
+        });
+    }
+
     this.name = name;
 
     /**
@@ -17,25 +23,56 @@ function Lobby(name, pUsers) {
     this.handleUserAction = function(action) {
         switch(action.type) {
             case 'join':
-                if(!users.includes(action.username)) {
-                    users.push(action.username);
-                } else {
+                if(users[action.username] !== undefined) {
                     return {
                         type: 'joinFail'
                     };
                 }
-                break;
+                users[action.username] = {ready: false};
+                return {
+                    type: 'joinSuccess'
+                };
+            case 'ready':
+                if(users[action.username] === undefined) {
+                    return {
+                        type: 'readyFail'
+                    };
+                }
+                users[action.username].ready = true;
+                return {
+                    type: 'readySuccess'
+                };
+            case 'start':
+                let allReady = true;
+                let usernames = Object.keys(users);
+                
+                usernames.forEach(function(key) {
+                    if(users[key].ready == false) {
+                        allReady = false;
+                    }
+                });
+
+                if(!allReady) {
+                    return {
+                        type: 'startFail'
+                    };
+                }
+
+                return {
+                    type: 'startSuccess',
+                    users: usernames
+                };
             case 'chatMessage':            
-                if(users.includes(action.username)) {
+                if(users[action.username] !== undefined) {
                     return {
                         type: 'chatBroadcast',
                         message: action.username + ': ' + action.message,
-                        users: users
+                        users: Object.keys(users)
                     };
                 }
                 break;
             case 'disconnect':
-                users.splice(users.indexOf(action.username, 1));
+                delete users[action.username];
                 break;
             default:
                 console.log('Error applying action in lobby...');

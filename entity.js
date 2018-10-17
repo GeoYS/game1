@@ -3,6 +3,8 @@
  * Each Entity has two core functions that should be implemented: 
  * - getState() should return an object containing relevant info about the Entity 
  * - update() should update the state of the Entity
+ * - getId() should return unique ID
+ * - getOwner() should return user that owns this Entity
  * 
  * An Entity can have different attributes added by simply leveraging Javascript objects.
  * This comes with a responsibility to be diligent in being as detailed with the 

@@ -1,5 +1,6 @@
 var e = require('../entity.js');
 var g = require('../game.js');
+var lm = require('../lobbyManager.js');
 var um = require('../userManager.js');
 var l = require('../lobby.js');
 
@@ -31,7 +32,8 @@ let initTests = function() {
                 type: 'join',
                 username: 'testUser2'
             });
-            test('Lobby join', ret == undefined);
+            test('Lobby join', ret != undefined &&
+                ret.type == 'joinSuccess');
 
             ret = testLobby.handleUserAction({
                 type: 'chatMessage',
@@ -59,6 +61,64 @@ let initTests = function() {
                     ret.users.length == 1 &&
                     ret.users[0] == 'testUser1');
         },
+        
+        /**
+         * Test lobbyManager.js
+         */
+        function() {
+            let lobbyManager = new lm.LobbyManager();
+            
+            let ret = lobbyManager.newLobby('testLobby', ['user1']);
+
+            ret = lobbyManager.handleUserAction({
+                type: 'join',
+                lobbyName: 'testLobby',
+                username: 'user2'
+            });
+            test('LobbyManager create and join success', ret !== undefined &&
+                ret.type == 'joinSuccess');
+
+            ret = lobbyManager.handleUserAction({
+                type: 'join',
+                lobbyName: 'testLobby2',
+                username: 'user1'
+            });
+            test('LobbyManager join fail', ret !== undefined &&
+                ret.type == 'fail');
+
+            ret = lobbyManager.handleUserAction({
+                type: 'ready',
+                lobbyName: 'testLobby',
+                username: 'user1'
+            });
+            test('LobbyManager ready success',  ret !== undefined &&
+                ret.type == 'readySuccess');
+
+            ret = lobbyManager.handleUserAction({
+                type: 'start',
+                lobbyName: 'testLobby',
+                username: 'user1'
+            });
+            test('LobbyManager start fail',  ret !== undefined &&
+                ret.type == 'startFail');
+            
+            ret = lobbyManager.handleUserAction({
+                type: 'ready',
+                lobbyName: 'testLobby',
+                username: 'user2'
+            });
+            ret = lobbyManager.handleUserAction({
+                type: 'start',
+                lobbyName: 'testLobby',
+                username: 'user1'
+            });
+            test('LobbyManager start success',  ret !== undefined &&
+                ret.type == 'startSuccess' &&
+                ret.users.length === 2 &&
+                ret.users[0] == 'user1' &&
+                ret.users[1] == 'user2');
+        },
+
         /**
          * Test userManager.js
          */

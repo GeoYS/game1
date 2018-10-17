@@ -10,7 +10,7 @@ var l = require('./lobby.js');
 function LobbyManager() {
     let lobbies = {};
 
-    // Map user id to list of lobbies they belong to
+    // Map username to list of lobbies they belong to
     let userLobbyTable = {};
 
     this.newLobby = function(name, players) {
@@ -23,15 +23,13 @@ function LobbyManager() {
         lobbies[name] = lobby;
 
         if(players != undefined) {
-            for(let player in players) {
+            players.forEach(function(player) {
                 if(userLobbyTable[player] != undefined) {
                     userLobbyTable[player].push(lobby);
                 }
-            }
+            });
         }
     };
-
-    this.outActions = [];
 
     /**
      * Handle user action. Probably either user message incoming, 
@@ -44,17 +42,28 @@ function LobbyManager() {
     this.handleUserAction = function (action) {
         switch(action.type) {
             case 'join':
-                lobbies[action.lobbyName].handleUserAction(action);
-                break;
+            case 'ready':
+            case 'start':
             case 'chatMessage':
+                if(lobbies[action.lobbyName] === undefined) {
+                    if(debug) {
+                        console.log('Error applying action in lobby...');
+                    }
+                    return {
+                        type: 'fail',
+                        message: 'Lobby does not exist...'
+                    };
+                }
                 return lobbies[action.lobbyName].handleUserAction(action);
             case 'disconnect':
-                for(let lobby in userLobbyTable) {
+                userLobbyTable[action.username].forEach(function(lobby) {
                     lobby.handleUserAction(action);
-                }
+                });
                 break;
             default:
-                console.log('Error applying action in lobby...');
+                if(debug) {
+                    console.log('Error applying action in lobby...');
+                }
                 break;
         }
     };

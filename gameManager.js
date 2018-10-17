@@ -11,6 +11,7 @@ var g = require('./game.js');
 function GameManager() {
     let games = [];
     let userGameTable = {};
+    let lobbyGameTable = {};
     
     this.update = function(delta) {
         games.forEach(function(game, i) {
@@ -24,9 +25,10 @@ function GameManager() {
         let gameInfo = {width: info.width, heigh: info.height};
         let newGame = new g.Game(gameInfo);
         games.push(newGame);
-        for(let user in info.users) {
+        info.users.forEach(function(user) {
             userGameTable[user] = newGame;
-        }
+        });
+        lobbyGameTable[info.lobbyName] = newGame;
     };
 
     /**
@@ -46,8 +48,12 @@ function GameManager() {
      * Propogate action to corresponding game
      * @param {*} action - Contains info about the user action
      */
-    this.handleUserAction = function (action) {
-        
+    this.handleUserAction = function(action) {
+        switch(action.type) {
+            default:
+                console.log('Error, unknown game action type!');
+                break;
+        }
     };
 }
 

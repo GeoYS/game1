@@ -6,7 +6,7 @@
 /**
  * Debug flag
  */
-const debug = false;
+global.debug = false;
 
 /**
  * Unit tests
