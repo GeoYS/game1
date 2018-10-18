@@ -39,6 +39,9 @@ function GameManager() {
      * @param {*} user 
      */
     this.userSnapshot = function(username) {
+        if(userGameTable[username] == undefined) {
+            return null;
+        }
         return userGameTable[username].getUserSnapshot(username);
     };
     

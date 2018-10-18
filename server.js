@@ -149,6 +149,36 @@ this.newConnection = function(socket) {
             socket.broadcast.emit('gameStart', lobbyName);
         }
     });
+    
+    socket.on('gameUpdate', function(info) {
+        if(!userManager.auth(info.username, info.instanceAuth)) {
+            // Uh oh
+            return;
+        }
+
+        let snapshot = gameManager.userSnapshot(info.username);
+        
+        if(snapshot == null) {
+            socket.broadcast.emit('gameUpdateFail', {message: 'No game found'});
+        } else {
+            socket.broadcast.emit('gameUpdate', snapshot);
+        }
+    });
+    
+    socket.on('gameAction', function(info) {
+        if(!userManager.auth(info.username, info.instanceAuth)) {
+            // Uh oh
+            return;
+        }
+
+        let ret = gameManager.handleUserAction(info.username);
+        
+        if(ret == null) {
+            socket.broadcast.emit('gameActionFail', {message: 'No game found'});
+        } else {
+            socket.broadcast.emit('gameAction', ret);
+        }
+    });
     socket.on('disconnect', function(info) {
         if(userManager.auth(info.username, info.instanceAuth)) {
             // Uh oh

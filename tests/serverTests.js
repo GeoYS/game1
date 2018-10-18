@@ -166,10 +166,12 @@ let initTests = function() {
             test("Entity init", entity.isDead === false &&
                     entity.hitpoints === 705);
 
-            let entity2 = new e.Entity(entity);
-            test("Entity clone attributes", Object.keys(entity2).length === 3);
+            let testTemplate2 = {testAttr: false};
+            let entity2 = new e.Entity(entity, testTemplate2);
+            test("Entity clone attributes", Object.keys(entity2).length === 4);
             test("Entity clone init", entity2.isDead === false &&
-                    entity2.hitpoints === 705);
+                    entity2.hitpoints === 705 &&
+                    entity2.testAttr === false);
         },
 
         /**
@@ -182,14 +184,15 @@ let initTests = function() {
                     game.height === 200 &&
                     game.isFinished === false);
 
-            testEntity = {
+            let testEntityTemplate = {
                 isDead: false,
                 delta: 0,
-                update: function(delta) {
+                update: function(delta, game) {
                     this.delta = delta;
                     this.isDead = true;
                 }
             };
+            let testEntity = new e.Entity(testEntityTemplate);
             entities = game.getUserSnapshot(/*TODO*/);
             test("Game getUserSnapshot", entities.length === 0)
 

@@ -6,7 +6,7 @@ var util = require('./util.js')
  * interface for applying user actions.
  */ 
 function Game(info) {
-    let entities = [];
+    this.entities = [];
     let pendingChanges = [];
     let actionChanges = [];
     
@@ -15,7 +15,7 @@ function Game(info) {
     this.isFinished = false;
     
     this.update = function(delta) {
-        entities.forEach(function(entity, i){
+        this.entities.forEach(function(entity, i){
             pendingChange = entity.update(delta, this);
             
             if(pendingChange) {
@@ -35,11 +35,11 @@ function Game(info) {
     };
     
     this.addEntity = function(entity) {
-        entities.push(entity);
+        this.entities.push(entity);
     };
 
     this.getUserSnapshot = function(username) {
-        return entities; // TODO: user specific snapshot
+        return this.entities; // TODO: user specific snapshot
     };
 
     /**

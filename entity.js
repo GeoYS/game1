@@ -14,8 +14,6 @@
  * Once an Entity should be removed from the game, set isDead = 1 
  */
 function Entity(/*attribute templates*/) {
-    Object.assign(this, ...arguments);
-
     this.update = function(delta, game) {
         console.log("TODO: implement update!!!");
         // This function has two purposes:
@@ -27,6 +25,9 @@ function Entity(/*attribute templates*/) {
         //    instead through the use of the callback function (i.e. 'game'
         //    should be treated as readonly within this function).
     };
+
+    // Put this at the end of this function so that update() gets assigned
+    Object.assign(this, ...arguments);
 }
 
 module.exports = {
