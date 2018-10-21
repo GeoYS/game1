@@ -20,13 +20,13 @@
 <script>
 
 testApi("validateLogin", {username: "test", pass: "pass"}, "Validate login", function(data) {
-    if (data.valid !== true) {
-        failTest("validateLogin");
+    if (data.valid == true) {
+        passTest("validateLogin");
     }
 });
 testApi("getOnlineFriends", {}, "Get online friends", function(data) {
-    if (data.numFriends !== 1 && data.friends[0] !== "Bob") {
-        failTest("validateLogin");
+    if (data.numFriends == 1 && data.friends[0] == "Bob") {
+        passTest("getOnlineFriends");
     }
 });
 testApi("createParty", {}, "createParty");
@@ -53,7 +53,7 @@ testApi("nonExistentApi", {}, "This test case is supposed to fail.");
 function testApi(apiName, params, description, callback) {
     $("#testContainer").append("<p id=\"" + apiName + "\" class=\"fail\">" + description + "</p>");
     $.post( "/" + apiName, wrapParams(params), function( data ) {
-        passTest(apiName);
+        failTest(apiName);
         if (callback) {
             callback(data);
         }

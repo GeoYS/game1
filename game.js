@@ -1,26 +1,57 @@
 var util = require('./util.js')
 
-/*
- * A Game represents an individual match. Several Games can be happening at once.
- * Contains all the logic, including unit updating, applying user actions, etc.
- *
+/**
+ * A Game represents an instance of a game world. Several Games can be
+ * happening at once. Contains the game update logic. Should expose
+ * interface for applying user actions.
  */ 
-function Game(width, height) {
-    this.units = [];
+function Game(info) {
+    this.entities = [];
+    let pendingChanges = [];
+    let actionChanges = [];
     
-    this.width = width;
-    this.height = height;
+    this.width = info.width;
+    this.height = info.height;
     this.isFinished = false;
     
     this.update = function(delta) {
-        units.forEach(function(unit, i){
-            unit.update(delta);
+        this.entities.forEach(function(entity, i){
+            pendingChange = entity.update(delta, this);
+            
+            if(pendingChange) {
+                pendingChanges.push(pendingChange);
+            }
         });
+
+        while(pendingChanges.length > 0) {
+            (pendingChanges.shift())();
+        }
+
+        while(actionChanges.length > 0) {
+            (actionChanges.shift())();
+        }
         
-        util.removeDead(units, 'isDead');
+        util.removeDead(entities, 'isDead');
     };
     
-    this.addUnit = function(unit) {
-        units.push(unit);
+    this.addEntity = function(entity) {
+        this.entities.push(entity);
     };
+
+    this.getUserSnapshot = function(username) {
+        return this.entities; // TODO: user specific snapshot
+    };
+
+    /**
+     * User actions impact the game like an act of god haha...
+     * Interpret action into a tangible change to the world and 
+     * queue change (as callback) to be applied next update cycle.
+     * @param {*} action 
+     */
+    this.applyAction = function(action) {
+    }
+}
+
+module.exports = {
+    Game:Game
 }
