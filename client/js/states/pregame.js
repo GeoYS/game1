@@ -7,8 +7,30 @@ GameStates.PREGAME.prototype = {
         var text = addText(game.world.centerX, game.world.centerY, "- Pre-Game -\nSelect deck and chat");
         var button = game.add.button(game.world.centerX - 95, 400, 'button', actionOnClick, this, 1, 1, 0);
 
+        socket.on('gameReady', function(ret) {
+            socket.emit('gameStart', {
+                username: username,
+                instanceAuth: instanceAuth,
+                lobbyName: lobbyName
+            });
+        });
+        socket.on('gameReadyFail', function(ret) {
+            console.log('gameReadyFail');
+        });
+
+        socket.on('gameStart', function(ret) {
+            game.state.start('ingame');
+        });
+        socket.on('gameStartFail', function(ret) {
+            console.log('gameReadyFail');
+        });
+        
         function actionOnClick() {
-            this.state.start('ingame');
+            socket.emit('gameReady', {
+                username: username,
+                instanceAuth: instanceAuth,
+                lobbyName: lobbyName
+            });
         };
     },
     update: function() {
