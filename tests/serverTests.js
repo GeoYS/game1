@@ -83,7 +83,7 @@ let initTests = function() {
                 lobbyName: 'testLobby2',
                 username: 'user1'
             });
-            test('LobbyManager join fail', ret !== undefined &&
+            test('LobbyManager join fail, lobby non-existant', ret !== undefined &&
                 ret.type == 'fail');
 
             ret = lobbyManager.handleUserAction({
