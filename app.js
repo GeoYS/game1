@@ -6,12 +6,29 @@
 /**
  * Debug flag
  */
-global.debug = false;
+global.debugTest = true;
+global.debugInfo = true;
+global.debugError = true;
+global.debugServerDelta = false;
+
+global.logError = function(message) {
+    if(debugError) {
+        console.log('ERROR: ' + message);
+    }
+};
+
+global.logInfo = function(message) {
+    if(debugInfo) {
+        console.log('INFO: ' + message);
+    }
+};
 
 /**
  * Unit tests
  */
-require('./tests/serverTests.js').runTests();
+if(debugTest) {
+    require('./tests/serverTests.js').runTests();
+}
 
 /**
  * Load dependendies
@@ -89,7 +106,7 @@ setInterval(function() {
     lastUpdate = currTime;
     server.update(delta);
 
-    if(debug) {
+    if(debugServerDelta) {
         console.log('Last delta: ' + delta);
     }
 }, TARGET_DELTA);

@@ -8,6 +8,7 @@ var l = require('./lobby.js');
  * - process user actions and propagate them to lobby
  */
 function LobbyManager() {
+    // Map lobby name to Lobby object
     let lobbies = {};
 
     // Map username to list of lobbies they belong to
@@ -42,13 +43,30 @@ function LobbyManager() {
     this.handleUserAction = function (action) {
         switch(action.type) {
             case 'join':
+                if(lobbies[action.lobbyName] === undefined) {
+                    logError('Lobby does not exist. ' + 'LobbyManager join ' + action.lobbyName);
+
+                    return {
+                        type: 'fail',
+                        message: 'Lobby does not exist...'
+                    };
+                }
+                let ret = lobbies[action.lobbyName].handleUserAction(action);
+
+                if(ret.type == 'joinSuccess') {
+                    if(userLobbyTable[action.username] == undefined) {
+                        userLobbyTable[action.username] = []
+                    }
+                    userLobbyTable[action.username].push(lobbies[action.lobbyName]);
+                }
+
+                return ret;
             case 'ready':
             case 'start':
             case 'chatMessage':
                 if(lobbies[action.lobbyName] === undefined) {
-                    if(debug) {
-                        console.log('Error applying action in lobby...');
-                    }
+                    logError('Error LobbyManager ' + action.type);
+
                     return {
                         type: 'fail',
                         message: 'Lobby does not exist...'
@@ -56,14 +74,20 @@ function LobbyManager() {
                 }
                 return lobbies[action.lobbyName].handleUserAction(action);
             case 'disconnect':
+                if(userLobbyTable[action.username] === undefined) {
+                    logError('Error LobbyManager disconnect... no lobbies for user');
+
+                    return {
+                        type: 'fail',
+                        message: 'No lobbies for user...'
+                    };
+                }
                 userLobbyTable[action.username].forEach(function(lobby) {
                     lobby.handleUserAction(action);
                 });
                 break;
             default:
-                if(debug) {
-                    console.log('Error applying action in lobby...');
-                }
+                logError('Error applying action in lobby...');
                 break;
         }
     };
