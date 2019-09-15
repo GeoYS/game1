@@ -18,7 +18,7 @@ this.guid = function() {
 
 this.logDebug = function(logMsg, dbgLevel) {
     if(dbgLevel <= debugLevel) {
-        var prefix = "";
+        let prefix = "";
         switch(dbgLevel) {
             case ERROR_LOG_LEVEL: prefix = "LOG_ERROR: "; break;
             case WARNING_LOG_LEVEL: prefix = "LOG_WARNING: "; break;
