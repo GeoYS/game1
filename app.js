@@ -4,9 +4,15 @@
  ********************************************************************/
 
 /**
- * Debug flag
+ * Debug logging level
  */
-global.debug = false;
+global.ERROR_LOG_LEVEL = 1;
+global.WARNING_LOG_LEVEL = 2;
+global.INFO_LOG_LEVEL = 3;
+global.VERBOSE_LOG_LEVEL = 4;
+global.VERYVERBOSE_LOG_LEVEL = 5;
+global.debugLevel = 1;
+var util = require('./util.js');
 
 /**
  * Unit tests
@@ -89,7 +95,5 @@ setInterval(function() {
     lastUpdate = currTime;
     server.update(delta);
 
-    if(debug) {
-        console.log('Last delta: ' + delta);
-    }
+    util.logDebug('Last delta: ' + delta, VERYVERBOSE_LOG_LEVEL);
 }, TARGET_DELTA);

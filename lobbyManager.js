@@ -46,9 +46,7 @@ function LobbyManager() {
             case 'start':
             case 'chatMessage':
                 if(lobbies[action.lobbyName] === undefined) {
-                    if(debug) {
-                        console.log('Error applying action in lobby...');
-                    }
+                    util.logDebug('Error applying action in lobby...', ERROR_LOG_LEVEL);
                     return {
                         type: 'fail',
                         message: 'Lobby does not exist...'
@@ -61,9 +59,7 @@ function LobbyManager() {
                 });
                 break;
             default:
-                if(debug) {
-                    console.log('Error applying action in lobby...');
-                }
+                util.logDebug('Error applying action in lobby...', ERROR_LOG_LEVEL);
                 break;
         }
     };
