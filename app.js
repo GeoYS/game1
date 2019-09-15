@@ -113,5 +113,5 @@ setInterval(function() {
     lastUpdate = currTime;
     server.update(delta);
 
-    util.logDebug('Last delta: ' + delta, VERYVERBOSE_LOG_LEVEL);
+    logDebug('Last delta: ' + delta, VERYVERBOSE_LOG_LEVEL);
 }, TARGET_DELTA);
