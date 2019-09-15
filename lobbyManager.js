@@ -44,7 +44,7 @@ function LobbyManager() {
         switch(action.type) {
             case 'join':
                 if(lobbies[action.lobbyName] === undefined) {
-                    logError('Lobby does not exist. ' + 'LobbyManager join ' + action.lobbyName);
+                    logDebug('Lobby does not exist. ' + 'LobbyManager join ' + action.lobbyName, ERROR_LOG_LEVEL);
 
                     return {
                         type: 'fail',
@@ -74,7 +74,7 @@ function LobbyManager() {
                 return lobbies[action.lobbyName].handleUserAction(action);
             case 'disconnect':
                 if(userLobbyTable[action.username] === undefined) {
-                    logError('Error LobbyManager disconnect... no lobbies for user');
+                    logDebug('Error LobbyManager disconnect... no lobbies for user', ERROR_LOG_LEVEL);
 
                     return {
                         type: 'fail',

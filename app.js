@@ -33,6 +33,7 @@ global.logDebug = function(logMsg, dbgLevel) {
 /**
  * Unit tests
  */
+debugTest = true;
 if(debugTest) {
     require('./tests/serverTests.js').runTests();
 }
@@ -40,7 +41,6 @@ if(debugTest) {
 /**
  * Load dependendies
  */
-
 var clientApi = require('./clientApi.js');
 
 var server = require('./server.js');

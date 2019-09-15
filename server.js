@@ -19,6 +19,7 @@ let io = null;
 this.init = function(socketIO) {
     lobbyManager.newLobby('global');
     io = socketIO;
+    global.newLobbyCounter = 0;
 };
 
 /**
@@ -71,17 +72,15 @@ this.newConnection = function(socket) {
     });
     socket.on('createLobby', function(info) {
         if(!userManager.auth(info.username, info.instanceAuth)) {
-            logInfo('createLobby auth error');
+            logDebug('createLobby auth error', ERROR_LOG_LEVEL);
             // Uh oh
             return;
         }
 
-        if( typeof this.newLobbyCounter == 'undefined' ) {
-            this.newLobbyCounter = 0;
-        }
-        this.newLobbyCounter++;
+        newLobbyCounter++;
+        console.log(newLobbyCounter);
 
-        let newLobbyName = 'lobby' + this.newLobbyCounter;
+        let newLobbyName = 'lobby' + newLobbyCounter;
         lobbyManager.newLobby(newLobbyName, [info.username]);
         socket.emit('createLobby', newLobbyName);
     });    

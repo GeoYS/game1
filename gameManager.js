@@ -55,7 +55,7 @@ function GameManager() {
     this.handleUserAction = function(action) {
         switch(action.type) {
             default:
-                logError('Error, unknown game action type! GameManager ' + action.type);
+                logDebug('Error, unknown game action type! GameManager ' + action.type, ERROR_LOG_LEVEL);
                 break;
         }
     };
