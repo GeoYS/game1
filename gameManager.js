@@ -29,6 +29,7 @@ function GameManager() {
             userGameTable[user] = newGame;
         });
         lobbyGameTable[info.lobbyName] = newGame;
+        return newGame.id;
     };
 
     /**

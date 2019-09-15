@@ -43,7 +43,9 @@ function updateQueueState(req, server) {
 }
 
 function createCustomGame(req, server) {
-    
+    id = server.gameManager.newGame(req);
+    res = {gameId: id};
+    return res;
 }
 
 function joinCustomGame(req, server) {

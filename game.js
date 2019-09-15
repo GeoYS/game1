@@ -6,6 +6,8 @@ var util = require('./util.js')
  * interface for applying user actions.
  */ 
 function Game(info) {
+    this.id = util.guid();
+
     this.entities = [];
     let pendingChanges = [];
     let actionChanges = [];
