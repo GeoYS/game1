@@ -11,13 +11,31 @@ global.WARNING_LOG_LEVEL = 2;
 global.INFO_LOG_LEVEL = 3;
 global.VERBOSE_LOG_LEVEL = 4;
 global.VERYVERBOSE_LOG_LEVEL = 5;
+
 global.debugLevel = 1;
-var util = require('./util.js');
+
+global.logDebug = function(logMsg, dbgLevel) {
+    if(dbgLevel <= debugLevel) {
+        let prefix = "";
+        switch(dbgLevel) {
+            case ERROR_LOG_LEVEL: prefix = "LOG_ERROR: "; break;
+            case WARNING_LOG_LEVEL: prefix = "LOG_WARNING: "; break;
+            case INFO_LOG_LEVEL: prefix = "LOG_INFO: "; break;
+            case VERBOSE_LOG_LEVEL: prefix = "LOG_VERBOSE: "; break;
+            case VERYVERBOSE_LOG_LEVEL: prefix = "LOG_VERYVERBOSE: "; break;
+            default: prefix = "LOG_UNKNOWN: "; break;
+        }
+
+        console.log(prefix + logMsg);
+    }
+}
 
 /**
  * Unit tests
  */
-require('./tests/serverTests.js').runTests();
+if(debugTest) {
+    require('./tests/serverTests.js').runTests();
+}
 
 /**
  * Load dependendies
@@ -95,5 +113,5 @@ setInterval(function() {
     lastUpdate = currTime;
     server.update(delta);
 
-    util.logDebug('Last delta: ' + delta, VERYVERBOSE_LOG_LEVEL);
+    logDebug('Last delta: ' + delta, VERYVERBOSE_LOG_LEVEL);
 }, TARGET_DELTA);

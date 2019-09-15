@@ -63,7 +63,7 @@ this.newConnection = function(socket) {
         });
 
         outAction.users.forEach(function(user) {
-            userSocketTable[user].broadcast.emit('chatMessage', {
+            userSocketTable[user].emit('chatMessage', {
                 lobbyName: info.lobbyName,
                 message: outAction.message
             });
@@ -71,6 +71,7 @@ this.newConnection = function(socket) {
     });
     socket.on('createLobby', function(info) {
         if(!userManager.auth(info.username, info.instanceAuth)) {
+            logInfo('createLobby auth error');
             // Uh oh
             return;
         }
@@ -80,9 +81,9 @@ this.newConnection = function(socket) {
         }
         this.newLobbyCounter++;
 
-        let newLobbyName = 'lobby' + this.newLobbyCount;
+        let newLobbyName = 'lobby' + this.newLobbyCounter;
         lobbyManager.newLobby(newLobbyName, [info.username]);
-        socket.broadcast.emit('joinGameLobby', newLobbyName);
+        socket.emit('createLobby', newLobbyName);
     });    
     socket.on('joinLobby', function(info) {
         if(!userManager.auth(info.username, info.instanceAuth)) {
@@ -99,9 +100,9 @@ this.newConnection = function(socket) {
         });
 
         if(ret.type == 'joinFail') {
-            socket.broadcast.emit('joinLobbyFail', lobbyName);   
+            socket.emit('joinLobbyFail', lobbyName);   
         } else {
-            socket.broadcast.emit('joinedLobby', lobbyName);
+            socket.emit('joinLobby', lobbyName);
         }
     });
     socket.on('gameReady', function(info) {
@@ -119,9 +120,9 @@ this.newConnection = function(socket) {
         });
 
         if(ret.type == 'readyFail') {
-            socket.broadcast.emit('gameReadyFail', lobbyName);   
+            socket.emit('gameReadyFail', lobbyName);   
         } else {
-            socket.broadcast.emit('gameReady', lobbyName);
+            socket.emit('gameReady', lobbyName);
         }
     });
     socket.on('gameStart', function(info) {
@@ -139,14 +140,14 @@ this.newConnection = function(socket) {
         });
 
         if(ret.type == 'startFail') {
-            socket.broadcast.emit('gameStartFail', lobbyName);   
+            socket.emit('gameStartFail', lobbyName);   
         } else {
             gameManager.newGame(ret);
             ret.users.forEach(function (username){
-                let userId = userManager.nameToId(userName);
-                userSocketTable[userId].broadcast.emit('gameStart', lobbyName);
+                let userId = userManager.nameToId(username);
+                userSocketTable[userId].emit('gameStart', lobbyName);
             });
-            socket.broadcast.emit('gameStart', lobbyName);
+            socket.emit('gameStart', lobbyName);
         }
     });
     
@@ -159,9 +160,9 @@ this.newConnection = function(socket) {
         let snapshot = gameManager.userSnapshot(info.username);
         
         if(snapshot == null) {
-            socket.broadcast.emit('gameUpdateFail', {message: 'No game found'});
+            socket.emit('gameUpdateFail', {message: 'No game found'});
         } else {
-            socket.broadcast.emit('gameUpdate', snapshot);
+            socket.emit('gameUpdate', snapshot);
         }
     });
     
@@ -174,9 +175,9 @@ this.newConnection = function(socket) {
         let ret = gameManager.handleUserAction(info.username);
         
         if(ret == null) {
-            socket.broadcast.emit('gameActionFail', {message: 'No game found'});
+            socket.emit('gameActionFail', {message: 'No game found'});
         } else {
-            socket.broadcast.emit('gameAction', ret);
+            socket.emit('gameAction', ret);
         }
     });
     socket.on('disconnect', function(info) {
