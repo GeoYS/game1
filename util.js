@@ -15,19 +15,3 @@ this.guid = function() {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
         s4() + '-' + s4() + s4() + s4();
 }
-
-this.logDebug = function(logMsg, dbgLevel) {
-    if(dbgLevel <= debugLevel) {
-        let prefix = "";
-        switch(dbgLevel) {
-            case ERROR_LOG_LEVEL: prefix = "LOG_ERROR: "; break;
-            case WARNING_LOG_LEVEL: prefix = "LOG_WARNING: "; break;
-            case INFO_LOG_LEVEL: prefix = "LOG_INFO: "; break;
-            case VERBOSE_LOG_LEVEL: prefix = "LOG_VERBOSE: "; break;
-            case VERYVERBOSE_LOG_LEVEL: prefix = "LOG_VERYVERBOSE: "; break;
-            default: prefix = "LOG_UNKNOWN: "; break;
-        }
-
-        console.log(prefix + logMsg);
-    }
-}
