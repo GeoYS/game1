@@ -1,7 +1,5 @@
 var e = require('../entity.js');
 
-var prototypeMergeable = Mergeable();
-
 function Positionable(x = 0, y = 0) {
     let positionable = new e.Entity();
 
@@ -57,7 +55,6 @@ function TestUnit(x = 0, y = 0) {
 var prototypeTestUnit = TestUnit();
 
 module.exports = {
-    Mergeable:Mergeable,
     Positionable:Positionable,
     TestUnit:TestUnit
 }

@@ -218,8 +218,8 @@ let initTests = function() {
                     entities.length === 0);
             
             let testPositionable = ie.Positionable(0, 0);
-            testPositionable.xVel = 1;
-            testPositionable.yVel = 1;
+            testPositionable.xVel = 7;
+            testPositionable.yVel = 8;
 
             game.addEntity(testPositionable);
             game.update(1000);

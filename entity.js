@@ -14,7 +14,7 @@ var u = require("./util.js");
  * attributes as possible. As well, be careful when modifying attributes after
  * they are set.
  * 
- * Once an Entity should be removed from the game, set isDead = 1 
+ * Once an Entity should be removed from the game, set isDead to true
  * Each Entity should have a property called type<EntityName> set to true.
  */
 function Entity(/*attribute templates*/) {
@@ -39,6 +39,8 @@ function Entity(/*attribute templates*/) {
     this.getId = function() {
         return id;
     };
+
+    this.isDead = false;
 
     // Put this at the end of this function so that update() gets assigned 
     // along with other properties
