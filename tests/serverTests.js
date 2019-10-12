@@ -3,6 +3,7 @@ var g = require('../game.js');
 var lm = require('../lobbyManager.js');
 var um = require('../userManager.js');
 var l = require('../lobby.js');
+var ie = require('../designImpl/ingameEntities.js');
 
 this.runTests = function() {
     initTests();
@@ -162,23 +163,33 @@ let initTests = function() {
         function() {
             let testTemplate = {isDead: false, hitpoints: 705};
             let entity = new e.Entity(testTemplate);
-            test("Entity attributes", Object.keys(entity).length === 3);
+            test("Entity attributes", Object.keys(entity).length === 6);
             test("Entity init", entity.isDead === false &&
                     entity.hitpoints === 705);
 
             let testTemplate2 = {testAttr: false};
             let entity2 = new e.Entity(entity, testTemplate2);
-            test("Entity clone attributes", Object.keys(entity2).length === 4);
+            test("Entity clone attributes", Object.keys(entity2).length === 7);
             test("Entity clone init", entity2.isDead === false &&
                     entity2.hitpoints === 705 &&
                     entity2.testAttr === false);
+                    
+            let testPositionable = ie.Positionable(0, 0);
+            testPositionable.xVel = 7;
+            testPositionable.yVel = 8;
+            e.tagEntity("testUser", testPositionable);
+            test("Entity Positionable", testPositionable.x === 0 &&
+                    testPositionable.y === 0 &&
+                    testPositionable.xVel === 7 &&
+                    testPositionable.yVel === 8 &&
+                    testPositionable.getOwner() === "testUser");
         },
 
         /**
          * Test game.js
          */
         function() {
-            let gameInfo = {width: 100, height:200};
+            let gameInfo = {width: 100, height:200, tilesWide:100, tilesHigh:200};
             let game = new g.Game(gameInfo);
             test("Game init", game.width === 100 &&
                     game.height === 200 &&
@@ -206,6 +217,22 @@ let initTests = function() {
                     testEntity.delta === 123 &&
                     entities.length === 0);
             
+            let testPositionable = ie.Positionable(0, 0);
+            testPositionable.xVel = 7;
+            testPositionable.yVel = 8;
+
+            game.addEntity(testPositionable);
+            game.update(1000);
+            test("Game Positionable", testPositionable.x === 7 &&
+                    testPositionable.y === 8 &&
+                    entities.length === 1);       
+
+            test("Game Map", game.map.grid[7][8][testPositionable.getId()] === testPositionable);
+
+            game.update(1000);
+            test("Game Map update remove", game.map.grid[7][8][testPositionable.getId()] === undefined);
+            test("Game Map update move", game.map.grid[14][16][testPositionable.getId()] === testPositionable);
+
         }
     );
 };

@@ -1,4 +1,5 @@
 var util = require('./util.js')
+var m = require('./map.js')
 
 /**
  * A Game represents an instance of a game world. Several Games can be
@@ -15,6 +16,13 @@ function Game(info) {
     this.width = info.width;
     this.height = info.height;
     this.isFinished = false;
+
+    this.map = new m.Map(
+            info.tilesWide,
+            info.tilesHigh,
+            info.width / info.tilesWide, 
+            info.height / info.tilesHigh,
+        );
     
     this.update = function(delta) {
         this.entities.forEach(function(entity, i){
@@ -33,7 +41,10 @@ function Game(info) {
             (actionChanges.shift())();
         }
         
-        util.removeDead(entities, 'isDead');
+        // Update map, then remove dead to allow map clean up references
+        // to the dead Entity
+        this.map.update(this.entities);
+        util.removeDead(this.entities, 'isDead');
     };
     
     this.addEntity = function(entity) {
