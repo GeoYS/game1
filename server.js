@@ -104,6 +104,8 @@ this.newConnection = function(socket) {
             socket.emit('joinLobby', lobbyName);
         }
     });
+
+    // User tells server they are ready to start
     socket.on('gameReady', function(info) {
         if(!userManager.auth(info.username, info.instanceAuth)) {
             // Uh oh
@@ -124,6 +126,8 @@ this.newConnection = function(socket) {
             socket.emit('gameReady', lobbyName);
         }
     });
+
+    // Only the leader of a lobby can start the game
     socket.on('gameStart', function(info) {
         if(!userManager.auth(info.username, info.instanceAuth)) {
             // Uh oh
@@ -150,6 +154,7 @@ this.newConnection = function(socket) {
         }
     });
     
+    // User request to get snapshot of the Game from their perspective
     socket.on('gameUpdate', function(info) {
         if(!userManager.auth(info.username, info.instanceAuth)) {
             // Uh oh
@@ -165,13 +170,14 @@ this.newConnection = function(socket) {
         }
     });
     
+    // User request to apply action to the Game
     socket.on('gameAction', function(info) {
         if(!userManager.auth(info.username, info.instanceAuth)) {
             // Uh oh
             return;
         }
 
-        let ret = gameManager.handleUserAction(info.username);
+        let ret = gameManager.handleUserAction(info);
         
         if(ret == null) {
             socket.emit('gameActionFail', {message: 'No game found'});
@@ -179,6 +185,8 @@ this.newConnection = function(socket) {
             socket.emit('gameAction', ret);
         }
     });
+
+    // User disconnects from the server
     socket.on('disconnect', function(info) {
         if(userManager.auth(info.username, info.instanceAuth)) {
             // Uh oh

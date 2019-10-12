@@ -108,7 +108,7 @@ server.init(io);
 // Main loop
 setInterval(function() {
     let currTime = Date.now();
-    let delta = currTime - lastUpdate;
+    let delta = currTime - lastUpdate; // Milliseconds
     
     lastUpdate = currTime;
     server.update(delta);
